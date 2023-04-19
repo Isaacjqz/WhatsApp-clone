@@ -22,7 +22,7 @@ const ChatListItem = () => {
         </View>
 
         <Text style={styles.subTitle} numberOfLines={2}>
-          Hello There, How is it going? Hope all is Well.
+        Hello There, How is it going? Hope all is Well.
           ldhflshdfljsdlfhasdjfhlajshflah
           djfdhjfldjhalsfhdfh;dsfhj;dsjf;ha;dfj;dsj
         </Text>
