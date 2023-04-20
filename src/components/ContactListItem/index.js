@@ -14,7 +14,7 @@ const ContactListItem = ({ user }) => {
       <Image source={{ uri: user.image }} style={styles.image} />
 
       <View style={styles.content}>
-        <Text style={styles.name} numberOfLines={1}> 
+        <Text style={styles.name} numberOfLines={1}>
           {user.name}
         </Text>
 
@@ -39,6 +39,9 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 30,
     marginRight: 10,
+  },
+  content: {
+    flex: 1,
   },
   name: {
     fontWeight: "bold",
