@@ -9,7 +9,7 @@ import { withAuthenticator } from "aws-amplify-react-native";
 import { getUser } from "./src/graphql/queries";
 import { createUser } from "./src/graphql/mutations";
 
-Amplify.configure({ ...awsconfig, Analytics: { disable: true } });
+Amplify.configure({ ...awsconfig, Analytics: { disabled: true } });
 
 function App() {
   useEffect(() => {
@@ -28,7 +28,7 @@ function App() {
         console.log("User already exist in DB");
         return;
       }
-      
+
       // if there is no user in db, create one
       const newUser = {
         id: authUser.attributes.sub,

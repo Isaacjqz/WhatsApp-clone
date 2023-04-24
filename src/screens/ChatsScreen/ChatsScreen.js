@@ -14,7 +14,16 @@ const ChatsScreen = () => {
       const response = await API.graphql(
         graphqlOperation(listChatRooms, { id: authUser.attributes.sub })
       );
-      setChatRooms(response.data.getUser.ChatRooms.items);
+
+      // sort chat rooms by last updated At
+      const rooms = response?.data?.getUser?.ChatRooms?.items || [];
+      const sortedRooms = rooms.sort(
+        (room1, room2) =>
+          new Date(room2.chatRoom.updatedAt) -
+          new Date(room1.chatRoom.updatedAt)
+      );
+
+      setChatRooms(sortedRooms);
     };
     fetchChatRooms();
   }, []);

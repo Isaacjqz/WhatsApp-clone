@@ -1,14 +1,29 @@
 import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useEffect, useState } from "react";
+
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { Auth } from "aws-amplify";
+
 dayjs.extend(relativeTime);
 
 const ChatListItem = ({ chat }) => {
   const navigation = useNavigation();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const authUser = await Auth.currentAuthenticatedUser();
+      const userItem = chat.users.items.find(
+        (item) => item.user.id !== authUser.attributes.sub
+      );
+      setUser(userItem?.user);
+    };
+    fetchUser();
+  }, []);
 
   // Loop through chat.users.items and find a user that is not us - Authenticated user -
-  const user = chat.users.items[0].user;
 
   return (
     <Pressable
@@ -27,13 +42,16 @@ const ChatListItem = ({ chat }) => {
           <Text style={styles.name} numberOfLines={1}>
             {user?.name}
           </Text>
-          <Text style={styles.subTitle}>
-            {dayjs(chat.lastMessage?.createdAt).fromNow(true)}
-          </Text>
+
+          {chat.LastMessage && (
+            <Text style={styles.subTitle}>
+              {dayjs(chat.LastMessage?.createdAt).fromNow(true)}
+            </Text>
+          )}
         </View>
 
         <Text style={styles.subTitle} numberOfLines={2}>
-          {chat.lastMessage?.text}
+          {chat.LastMessage?.text}
         </Text>
       </View>
     </Pressable>
