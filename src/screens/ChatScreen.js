@@ -13,6 +13,7 @@ import InputBox from "../components/InputBox";
 import { useEffect, useState } from "react";
 import { API, graphqlOperation } from "aws-amplify";
 import { getChatRoom, listMessagesByChatRoom } from "../graphql/queries";
+import { onCreateMessage } from "../graphql/subscriptions";
 
 const ChatScreen = () => {
   const [chatRoom, setChatRoom] = useState(null);
@@ -40,6 +41,21 @@ const ChatScreen = () => {
     ).then((result) => {
       setMessages(result.data?.listMessagesByChatRoom?.items);
     });
+
+    // Subscribe to new messages
+    const subscription = API.graphql(
+      graphqlOperation(onCreateMessage, {
+        filter: { chatroomID: { eq: chatroomID } },
+      })
+    ).subscribe({
+      next: ({ value }) => {
+        setMessages((messages) => [value.data.onCreateMessage, ...messages]);
+      },
+      error: (error) => console.warn(error),
+    });
+
+    // Stop receiving data updates from the subscription
+    return () => subscription.unsubscribe;
   }, [chatroomID]);
 
   useEffect(() => {
